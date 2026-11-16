@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Concert Events - CrypTix{% endblock %}
+
+{% block content %}
+<div class="row g-3 g-md-4 py-2">
+    <!-- Header -->
+    <div class="col-12">
+        <div class="card border-0 shadow-sm p-3 p-md-4 rounded-4" style="background: linear-gradient(135deg, #FFF5F1 0%, #FFFFFF 100%); border: 1.5px solid var(--border-soft) !important;">
+            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-3">
+                <div>
+                    <span class="badge badge-rose mb-2"><i class="bi bi-stars me-1"></i> Live Music Catalog</span>
+                    <h2 class="fw-bold text-dark mb-1 fs-3">Upcoming Concerts & Tours</h2>
+                    <p class="text-muted small mb-0">Browse verified shows. Direct scalping and bot hoarding are strictly prevented.</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="{{ url_for('events.my_tickets') }}" class="btn btn-outline-cryptix btn-sm py-2 px-3">
+                        <i class="bi bi-ticket-perforated-fill me-1"></i> My Passes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Concert Cards Grid -->
+    {% if events %}
+        {% for ev in events %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 card-hover p-3 border-0 shadow-sm d-flex flex-column justify-content-between">
+                <div>
+                    <!-- Visual Header with Date Badge -->
+                    <div class="rounded-4 mb-3 p-3 text-center position-relative overflow-hidden" 
+                         style="background: linear-gradient(135deg, #FAD0C4 0%, #FFD1FF 100%); min-height: 140px; display: flex; flex-direction: column; justify-content: flex-end;">
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-white text-dark fw-bold shadow-sm" style="font-size: 0.75rem;">
+                            <i class="bi bi-calendar-event me-1 text-danger"></i> {{ ev.event_date[:10] if ev.event_date|string|length >= 10 else ev.event_date }}
+                        </span>
+                        <h5 class="fw-extrabold text-dark mb-0">{{ ev.event_title }}</h5>
+                    </div>
+
+                    <!-- Event Details -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center text-muted small mb-2" style="font-size: 0.82rem;">
+                            <i class="bi bi-geo-alt-fill text-accent me-1" style="color: var(--accent-color);"></i> {{ ev.venue }}
+                        </div>
+                        <p class="small text-secondary mb-3 line-clamp-2" style="font-size: 0.8rem;">
+                            {{ ev.description or 'Official concert event. Fair face-value admission guaranteed with dynamic authentication.' }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer: Capacity & Booking -->
+                <div class="pt-2 border-top">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <span class="small text-muted d-block" style="font-size: 0.7rem;">FACE VALUE</span>
+                            <span class="fw-bold text-dark fs-5">RM {{ "%.2f"|format(ev.ticket_price) }}</span>
+                        </div>
+                        <div class="text-end">
+                            <span class="small text-muted d-block" style="font-size: 0.7rem;">AVAILABILITY</span>
+                            {% if ev.available_capacity > 0 %}
+                                <span class="badge badge-peach small">{{ ev.available_capacity }} / {{ ev.total_capacity }} Left</span>
+                            {% else %}
+                                <span class="badge bg-danger text-white small">Sold Out</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if ev.available_capacity > 0 %}
+                        <a href="{{ url_for('events.event_details', event_id=ev.event_id) }}" class="btn btn-primary-cryptix w-100 py-2 small">
+                            <i class="bi bi-ticket-detailed me-1"></i> View Details & Reserve
+                        </a>
+                    {% else %}
+                        <button class="btn btn-secondary w-100 py-2 small" disabled>
+                            <i class="bi bi-x-circle me-1"></i> Sold Out
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="card p-5 text-center border-0 shadow-sm">
+                <i class="bi bi-calendar-x text-muted fs-1 mb-2"></i>
+                <h5 class="fw-bold text-dark">No Concert Events Available</h5>
+                <p class="text-muted small">Please check back soon for upcoming tour announcements.</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

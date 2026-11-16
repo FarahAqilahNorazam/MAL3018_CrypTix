@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}My Concert Passes - CrypTix{% endblock %}
+
+{% block content %}
+<div class="row g-3 g-md-4 py-2">
+    <!-- Header -->
+    <div class="col-12">
+        <div class="card border-0 shadow-sm p-3 p-md-4 rounded-4" style="background: linear-gradient(135deg, #FFF5F1 0%, #FFFFFF 100%); border: 1.5px solid var(--border-soft) !important;">
+            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-3">
+                <div>
+                    <span class="badge badge-rose mb-2"><i class="bi bi-wallet2 me-1"></i> Fan Pass Wallet</span>
+                    <h2 class="fw-bold text-dark mb-1 fs-3">My Concert Tickets</h2>
+                    <p class="text-muted small mb-0">Your verified passes with assigned seat numbers and admission status.</p>
+                </div>
+                <a href="{{ url_for('events.browse_events') }}" class="btn btn-outline-cryptix btn-sm py-2 px-3">
+                    <i class="bi bi-music-note-beamed me-1"></i> Browse More Shows
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket Passes List -->
+    {% if tickets %}
+        {% for t in tickets %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="ticket-stub shadow-sm h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <!-- Ticket Header -->
+                    <div class="ticket-stub-header d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="badge bg-white text-dark small fw-bold mb-1 shadow-sm">
+                                PASS #TIX-{{ "%04d"|format(t.ticket_id) }}
+                            </span>
+                            <h6 class="fw-bold text-dark mb-0">{{ t.event_title }}</h6>
+                            <span class="small text-muted" style="font-size: 0.75rem;">
+                                <i class="bi bi-geo-alt-fill text-accent me-1" style="color: var(--accent-color);"></i>{{ t.venue }}
+                            </span>
+                        </div>
+                        <span class="badge {% if t.status == 'SOLD' %}bg-success-subtle text-success border border-success-subtle{% else %}badge-rose{% endif %} py-1 px-2 small">
+                            <i class="bi bi-check-circle-fill me-1"></i> {{ t.status }}
+                        </span>
+                    </div>
+
+                    <!-- Ticket Details Grid -->
+                    <div class="row g-2 small text-muted mb-3 pt-2" style="font-size: 0.8rem;">
+                        <div class="col-6">
+                            <span class="d-block text-muted" style="font-size: 0.7rem;">ASSIGNED SEAT</span>
+                            <strong class="text-dark fs-6">{{ t.seat_number }}</strong>
+                        </div>
+                        <div class="col-6">
+                            <span class="d-block text-muted" style="font-size: 0.7rem;">CONCERT DATE</span>
+                            <strong class="text-dark">{{ t.event_date[:10] if t.event_date|string|length >= 10 else t.event_date }}</strong>
+                        </div>
+                        <div class="col-6 mt-2">
+                            <span class="d-block text-muted" style="font-size: 0.7rem;">FACE VALUE</span>
+                            <strong class="text-dark">RM {{ "%.2f"|format(t.ticket_price) }}</strong>
+                        </div>
+                        <div class="col-6 mt-2">
+                            <span class="d-block text-muted" style="font-size: 0.7rem;">PURCHASED AT</span>
+                            <span class="text-muted" style="font-size: 0.75rem;">{{ t.purchased_at[:16] if t.purchased_at|string|length >= 16 else t.purchased_at }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Cryptographic Identity Tokenization (Phase 3) -->
+                    <div class="p-2 rounded-3 mb-2" style="background-color: var(--bg-main); border: 1px dashed var(--border-soft);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="text-muted" style="font-size: 0.72rem;">Masked Identity:</span>
+                            <span class="font-monospace fw-bold text-dark" style="font-size: 0.75rem;">
+                                {{ t.masked_ic if t.masked_ic else user.masked_ic }}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted" style="font-size: 0.7rem;">Identity Token (SHA-256):</span>
+                            <span class="font-monospace text-muted" style="font-size: 0.68rem;" title="{{ t.mykad_hash }}">
+                                {{ t.mykad_hash[:16] }}...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Pass Verification Status -->
+                <div class="pt-2 border-top">
+                    <div class="p-2 rounded-3 bg-light text-center border mb-2">
+                        <span class="badge badge-peach small mb-1">
+                            <i class="bi bi-shield-lock-fill me-1"></i> Identity Bound
+                        </span>
+                        <div class="small text-muted" style="font-size: 0.72rem;">
+                            Bound to attendee &bull; Phase 4 will activate Dynamic QR
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="card p-5 text-center border-0 shadow-sm">
+                <i class="bi bi-ticket-perforated text-muted fs-1 mb-2"></i>
+                <h5 class="fw-bold text-dark">No Concert Passes Found</h5>
+                <p class="text-muted small mb-3">You haven't purchased any tickets yet. Explore our upcoming live shows!</p>
+                <div>
+                    <a href="{{ url_for('events.browse_events') }}" class="btn btn-primary-cryptix btn-sm py-2 px-4">
+                        <i class="bi bi-music-note-beamed me-1"></i> Browse Live Shows
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

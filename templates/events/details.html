@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.event_title }} - Details - CrypTix{% endblock %}
+
+{% block content %}
+<div class="row g-3 g-md-4 py-2">
+    <!-- Breadcrumb -->
+    <div class="col-12">
+        <a href="{{ url_for('events.browse_events') }}" class="text-decoration-none small text-muted d-inline-flex align-items-center">
+            <i class="bi bi-arrow-left me-1"></i> Back to All Events
+        </a>
+    </div>
+
+    <!-- Event Banner & Main Information -->
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm p-4 rounded-4 h-100">
+            <!-- Event Hero Header -->
+            <div class="rounded-4 mb-4 p-4 text-center position-relative overflow-hidden" 
+                 style="background: linear-gradient(135deg, #FAD0C4 0%, #FFD1FF 100%); min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end;">
+                <span class="position-absolute top-0 start-0 m-3 badge bg-white text-dark fw-bold shadow-sm">
+                    <i class="bi bi-broadcast text-danger me-1"></i> OFFICIAL LIVE TOUR
+                </span>
+                <h3 class="fw-extrabold text-dark mb-1">{{ event.event_title }}</h3>
+                <p class="text-dark opacity-75 small mb-0">{{ event.venue }}</p>
+            </div>
+
+            <!-- Event Details Grid -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-sm-4">
+                    <div class="p-3 rounded-3 bg-light border">
+                        <span class="small text-muted d-block" style="font-size: 0.72rem;">EVENT DATE & TIME</span>
+                        <strong class="text-dark small d-block">{{ event.event_date }}</strong>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                    <div class="p-3 rounded-3 bg-light border">
+                        <span class="small text-muted d-block" style="font-size: 0.72rem;">VENUE LOCATION</span>
+                        <strong class="text-dark small d-block text-truncate">{{ event.venue }}</strong>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="p-3 rounded-3 bg-light border">
+                        <span class="small text-muted d-block" style="font-size: 0.72rem;">FACE VALUE PRICE</span>
+                        <strong class="text-dark fs-6 d-block">RM {{ "%.2f"|format(event.ticket_price) }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <h5 class="fw-bold text-dark mb-2">About the Concert</h5>
+            <p class="text-secondary small mb-4" style="line-height: 1.6;">
+                {{ event.description or 'Join thousands of fans for an unforgettable live performance with world-class audio, lighting, and stage production. Tickets are protected by CrypTix anti-scalping architecture.' }}
+            </p>
+
+            <!-- Anti-Scalping Policy Notice -->
+            <div class="p-3 rounded-3 mt-auto" style="background-color: var(--bg-main); border: 1.5px dashed var(--border-soft);">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-shield-check text-accent fs-4 me-2 mt-0" style="color: var(--accent-color);"></i>
+                    <div class="small">
+                        <strong class="text-dark">CrypTix Fair Entry Policy:</strong>
+                        <ul class="mb-0 ps-3 mt-1 text-muted" style="font-size: 0.78rem;">
+                            <li>Strict purchase limit of <strong>maximum 4 tickets per user account</strong>.</li>
+                            <li>Sequential seat numbers are assigned automatically (e.g. <code>CAT1-A0001</code>).</li>
+                            <li>Tickets are bound to your account and valid for gate admission.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Purchase Ticket Sidebar (Simulated Payment) -->
+    <div class="col-12 col-lg-4">
+        <div class="card border-0 shadow-sm p-4 rounded-4 sticky-top" style="top: 85px;">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <h5 class="fw-bold text-dark mb-0 fs-6">Ticket Checkout</h5>
+                <span class="badge badge-peach small">Simulated Payment</span>
+            </div>
+
+            <!-- Capacity & Quota Status -->
+            <div class="mb-3">
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span>Available Capacity:</span>
+                    <strong class="text-dark">{{ event.available_capacity }} / {{ event.total_capacity }}</strong>
+                </div>
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span>Your Current Holdings:</span>
+                    <strong class="text-dark">{{ user_ticket_count }} / 4 Max</strong>
+                </div>
+                <div class="d-flex justify-content-between small text-muted">
+                    <span>Allowed to Purchase:</span>
+                    <strong class="{% if remaining_allowed > 0 %}text-success{% else %}text-danger{% endif %}">
+                        {{ remaining_allowed }} Ticket(s)
+                    </strong>
+                </div>
+            </div>
+
+            <!-- Cryptographic Identity Binding Preview (Phase 3) -->
+            <div class="p-2 px-3 mb-3 rounded-3" style="background-color: var(--bg-main); border: 1px dashed var(--border-soft);">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                    <span class="small text-muted" style="font-size: 0.75rem;">Attendee Identity:</span>
+                    <span class="badge" style="background-color: var(--secondary-color); color: var(--accent-color); font-size: 0.72rem;">
+                        <i class="bi bi-shield-check me-1"></i> Bound
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong class="font-monospace small text-dark">{{ user.masked_ic if user.masked_ic else '******-**-****' }}</strong>
+                    <span class="text-muted" style="font-size: 0.72rem;">SHA-256 Token</span>
+                </div>
+                <div class="text-muted mt-1" style="font-size: 0.7rem;">
+                    Tickets purchased will be cryptographically bound to this tokenized identity.
+                </div>
+            </div>
+
+            {% if event.available_capacity <= 0 %}
+                <!-- Sold Out Banner -->
+                <div class="alert alert-danger text-center py-3 mb-0">
+                    <i class="bi bi-x-circle-fill d-block fs-3 mb-1"></i>
+                    <strong>Sold Out</strong>
+                    <p class="small mb-0 mt-1">All tickets for this event have been allocated.</p>
+                </div>
+            {% elif remaining_allowed <= 0 %}
+                <!-- User Reached Maximum 4 Tickets Limit -->
+                <div class="alert alert-warning text-center py-3 mb-0">
+                    <i class="bi bi-exclamation-triangle-fill d-block fs-3 mb-1"></i>
+                    <strong>Quota Reached (4/4)</strong>
+                    <p class="small mb-0 mt-1">You already hold 4 tickets for this concert. Anti-scalping policies prevent additional purchases.</p>
+                    <a href="{{ url_for('events.my_tickets') }}" class="btn btn-outline-cryptix btn-sm mt-2 w-100">
+                        View My Tickets
+                    </a>
+                </div>
+            {% else %}
+                <!-- Purchase Form -->
+                <form method="POST" action="{{ url_for('events.purchase_ticket', event_id=event.event_id) }}">
+                    <!-- Quantity Selector -->
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label small fw-bold text-dark">Select Quantity</label>
+                        <select class="form-select" id="quantity" name="quantity" onchange="updateTotal(this.value)">
+                            {% for i in range(1, [remaining_allowed, event.available_capacity]|min + 1) %}
+                                <option value="{{ i }}">{{ i }} Ticket{% if i > 1 %}s{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                        <span class="text-muted small d-block mt-1" style="font-size: 0.75rem;">
+                            Enforced limit: Maximum {{ remaining_allowed }} more for your account.
+                        </span>
+                    </div>
+
+                    <!-- Simulated Payment Method -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-dark">Simulated Payment Method</label>
+                        <div class="p-2 rounded-3 border bg-light small mb-2 d-flex align-items-center">
+                            <input class="form-check-input me-2 mt-0" type="radio" name="payment_method" id="pay1" checked>
+                            <label class="form-check-label text-dark" for="pay1">
+                                <i class="bi bi-credit-card-2-front text-accent me-1"></i> Simulated FPX / Instant Pay
+                            </label>
+                        </div>
+                        <div class="p-2 rounded-3 border bg-light small d-flex align-items-center">
+                            <input class="form-check-input me-2 mt-0" type="radio" name="payment_method" id="pay2">
+                            <label class="form-check-label text-dark" for="pay2">
+                                <i class="bi bi-wallet2 text-accent me-1"></i> Simulated Fan Wallet
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Total Price Display -->
+                    <div class="p-3 rounded-3 mb-3" style="background-color: var(--bg-main); border: 1px solid var(--border-soft);">
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span>Ticket Price:</span>
+                            <span>RM {{ "%.2f"|format(event.ticket_price) }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span>Booking Fee:</span>
+                            <span class="text-success fw-bold">RM 0.00 (Fair Entry)</span>
+                        </div>
+                        <div class="d-flex justify-content-between fw-bold text-dark fs-6 pt-2 border-top">
+                            <span>Total Due:</span>
+                            <span id="totalDisplay" style="color: var(--accent-color);">RM {{ "%.2f"|format(event.ticket_price) }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary-cryptix w-100 py-3 fw-bold shadow-sm">
+                        <i class="bi bi-lock-fill me-1"></i> Confirm & Purchase Tickets
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const basePrice = {{ event.ticket_price }};
+function updateTotal(qty) {
+    const total = basePrice * parseInt(qty);
+    document.getElementById('totalDisplay').innerText = 'RM ' + total.toFixed(2);
+}
+</script>
+{% endblock %}

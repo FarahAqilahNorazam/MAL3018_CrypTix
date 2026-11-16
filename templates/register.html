@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Create Fan Account - CrypTix{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center py-2 py-md-4">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-sm border-0 p-3 p-md-4 rounded-4">
+            <!-- Header -->
+            <div class="text-center mb-3 mb-md-4">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle p-3 mb-2 shadow-sm"
+                     style="background: linear-gradient(135deg, var(--secondary-color), var(--border-light)); color: var(--accent-color); width: 62px; height: 62px;">
+                    <i class="bi bi-person-heart fs-2"></i>
+                </div>
+                <h3 class="fw-bold mb-1 text-dark fs-4">Join CrypTix</h3>
+                <p class="text-muted small mb-0">Create your verified fan profile for fair concert ticketing</p>
+            </div>
+
+            <!-- Welcoming Fan Role Notice (No Role Selection Allowed) -->
+            <div class="p-2 p-md-3 mb-3 rounded-3" style="background-color: var(--bg-main); border: 1px solid var(--border-soft);">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-stars fs-5 me-2 text-accent mt-0" style="color: var(--accent-color);"></i>
+                    <div class="small" style="font-size: 0.8rem;">
+                        <strong class="text-dark">Customer Account:</strong> 
+                        All new fan registrations are enrolled as <span class="badge badge-rose">Customer</span>. Box Office & Organizer accounts are seeded administratively.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <form method="POST" action="{{ url_for('auth.register') }}" id="registerForm" novalidate>
+                <!-- Full Legal Name -->
+                <div class="mb-3">
+                    <label for="name" class="form-label small fw-bold text-dark">Full Legal Name <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               value="{{ name if name else '' }}" placeholder="e.g. Nur Farah Aqilah" required>
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="mb-3">
+                    <label for="email" class="form-label small fw-bold text-dark">Email Address <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control" id="email" name="email" 
+                               value="{{ email if email else '' }}" placeholder="fan@example.com" required>
+                    </div>
+                </div>
+
+                <!-- Malaysian MyKad Number Field (Phase 3) -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label for="mykad" class="form-label small fw-bold text-dark mb-0">Malaysian MyKad Number <span class="text-danger">*</span></label>
+                        <span class="badge" style="background-color: var(--secondary-color); color: var(--accent-color); font-size: 0.7rem;">
+                            <i class="bi bi-shield-lock-fill me-1"></i> SHA-256 Tokenized
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+                        <input type="text" class="form-control font-monospace" id="mykad" name="mykad" 
+                               placeholder="990101-01-1234" maxlength="14" autocomplete="off" required>
+                    </div>
+                    <div class="form-text small" style="font-size: 0.75rem;">
+                        <i class="bi bi-info-circle text-muted me-1"></i>
+                        Format: <span class="font-monospace">YYMMDD-PB-###G</span>. Raw IC is <strong>never stored</strong>; only an irreversible SHA-256 hash & mask (<span class="font-monospace">******-**-1234</span>) are saved.
+                    </div>
+                </div>
+
+                <!-- Passwords -->
+                <div class="row g-2 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label for="password" class="form-label small fw-bold text-dark">Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Min 8 characters" minlength="8" required>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="confirm_password" class="form-label small fw-bold text-dark">Confirm Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-shield-check"></i></span>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                   placeholder="Re-type password" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MANDATORY PDPA 2010 CONSENT CHECKBOX -->
+                <div class="p-3 mb-3 rounded-3" style="background-color: #FFFDFB; border: 1.5px solid var(--border-soft);">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="pdpa_consent" name="pdpa_consent" value="1" required>
+                        <label class="form-check-label small text-dark" for="pdpa_consent" style="font-size: 0.82rem; line-height: 1.4;">
+                            <span class="fw-bold" style="color: var(--accent-color);">[Mandatory PDPA 2010 Consent]</span> 
+                            I consent to the processing of my MyKad information for identity tokenization under the Personal Data Protection Act (PDPA) 2010.
+                        </label>
+                    </div>
+                    <div class="mt-2 text-end">
+                        <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none" style="color: var(--accent-color); font-size: 0.78rem;" data-bs-toggle="modal" data-bs-target="#pdpaModal">
+                            <i class="bi bi-shield-check me-1"></i> Read PDPA Terms &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile-Friendly Submit Button -->
+                <button type="submit" class="btn btn-primary-cryptix w-100 py-3 fw-bold shadow-sm">
+                    <i class="bi bi-stars me-1"></i> Create My Fan Account
+                </button>
+            </form>
+
+            <div class="text-center mt-3 pt-2">
+                <span class="text-muted small">Already have an account? </span>
+                <a href="{{ url_for('auth.login') }}" class="fw-bold text-decoration-none small d-inline-block" style="color: var(--accent-color);">
+                    Sign in here &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PDPA 2010 Compliance Modal -->
+<div class="modal fade" id="pdpaModal" tabindex="-1" aria-labelledby="pdpaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 p-2">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle p-2 me-2" style="background-color: var(--secondary-color); color: var(--accent-color);">
+                        <i class="bi bi-shield-check fs-5"></i>
+                    </div>
+                    <h5 class="modal-title fw-bold text-dark mb-0 fs-6" id="pdpaModalLabel">
+                        PDPA 2010 Data Processing Notice
+                    </h5>
+                </div>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body small text-secondary pt-3">
+                <p>In accordance with the <strong>Personal Data Protection Act 2010 (Act 709)</strong> of Malaysia, CrypTix implements strict data minimization:</p>
+                <div class="p-3 rounded-3 mb-3" style="background-color: var(--bg-main); border: 1px solid var(--border-soft);">
+                    <ul class="mb-0 ps-3" style="font-size: 0.8rem;">
+                        <li class="mb-2"><strong class="text-dark">Identity Tokenization:</strong> Identity numbers are irreversibly hashed using SHA-256. Raw identification numbers are never retained in plain-text.</li>
+                        <li class="mb-2"><strong class="text-dark">Password Security:</strong> Passwords are protected using salted BCrypt hashing.</li>
+                        <li class="mb-0"><strong class="text-dark">Session State:</strong> Authenticated sessions utilize cryptographically signed JSON Web Tokens (JWT).</li>
+                    </ul>
+                </div>
+                <p class="mb-0 text-muted" style="font-size: 0.78rem;">Your explicit consent authorizes this cryptographic pipeline to guarantee fair, scalper-free concert access.</p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-cryptix btn-sm" data-bs-dismiss="modal">I Agree & Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Auto-format MyKad as user types: YYMMDD-PB-###G
+const mykadInput = document.getElementById('mykad');
+if (mykadInput) {
+    mykadInput.addEventListener('input', function(e) {
+        let val = e.target.value.replace(/\D/g, '').substring(0, 12);
+        let formatted = '';
+        if (val.length > 0) {
+            formatted = val.substring(0, 6);
+        }
+        if (val.length > 6) {
+            formatted += '-' + val.substring(6, 8);
+        }
+        if (val.length > 8) {
+            formatted += '-' + val.substring(8, 12);
+        }
+        e.target.value = formatted;
+    });
+}
+
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    const pw = document.getElementById('password').value;
+    const cpw = document.getElementById('confirm_password').value;
+    const consent = document.getElementById('pdpa_consent').checked;
+    const mykadVal = document.getElementById('mykad').value.trim();
+
+    if (!consent) {
+        e.preventDefault();
+        alert('Please acknowledge and accept the mandatory PDPA 2010 Consent Checkbox before registering.');
+        return false;
+    }
+
+    const cleanIc = mykadVal.replace(/\D/g, '');
+    if (cleanIc.length !== 12) {
+        e.preventDefault();
+        alert('Please enter a valid 12-digit Malaysian MyKad number (e.g. 990101-01-1234).');
+        return false;
+    }
+
+    if (pw !== cpw) {
+        e.preventDefault();
+        alert('Passwords do not match. Please verify your password entry.');
+        return false;
+    }
+});
+</script>
+{% endblock %}

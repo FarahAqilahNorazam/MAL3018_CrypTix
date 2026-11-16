@@ -1,0 +1,287 @@
+/* ==========================================================================
+   CrypTix - Modern Concert Ticketing Theme (Soft & Elegant Pastel Aesthetic)
+   ========================================================================== */
+
+:root {
+    /* Brand Color Palette */
+    --bg-main: #FFF8F5;            /* Warm beige / soft cream peach background */
+    --card-bg: #FFFFFF;            /* Pure crisp white card background */
+    --primary-color: #F4A6A6;      /* Pastel rose / coral pink */
+    --secondary-color: #F6CFC7;    /* Pastel peach */
+    --accent-color: #D97757;       /* Warm terracotta / coral accent */
+    --highlight-color: #E88FA0;    /* Warm rose pink highlight */
+    --text-main: #3F3A39;          /* Warm charcoal / deep espresso text */
+    --text-muted: #78706E;         /* Elegant muted text */
+    
+    /* Subtle Borders & Soft Glows */
+    --border-soft: #F6CFC7;
+    --border-light: #FDF1ED;
+    --shadow-sm: 0 4px 15px rgba(217, 119, 87, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+    --shadow-card: 0 12px 32px rgba(217, 119, 87, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+    --shadow-hover: 0 18px 40px rgba(217, 119, 87, 0.14), 0 4px 12px rgba(0, 0, 0, 0.03);
+    --shadow-primary: 0 8px 20px rgba(244, 166, 166, 0.4);
+}
+
+/* Base Body Styling */
+body {
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    letter-spacing: -0.01em;
+    min-height: 100vh;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--text-main);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* Card Styling: Pure White, Soft Border, Warm Shadow */
+.card {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: 1.25rem !important;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Navbar Customization */
+.navbar-cryptix {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1.5px solid var(--border-soft);
+    box-shadow: 0 2px 14px rgba(217, 119, 87, 0.05);
+}
+
+.navbar-brand-title {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.03em;
+}
+
+.navbar-brand-title span {
+    color: var(--accent-color);
+}
+
+.nav-link {
+    color: var(--text-main) !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--accent-color) !important;
+    background-color: var(--border-light);
+}
+
+/* Buttons */
+.btn-primary-cryptix {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--highlight-color) 100%);
+    border: none;
+    color: #FFFFFF !important;
+    font-weight: 700;
+    padding: 0.65rem 1.4rem;
+    border-radius: 0.85rem;
+    box-shadow: var(--shadow-primary);
+    transition: all 0.25s ease;
+}
+
+.btn-primary-cryptix:hover {
+    background: linear-gradient(135deg, var(--highlight-color) 0%, var(--accent-color) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(232, 143, 160, 0.45);
+    color: #FFFFFF !important;
+}
+
+.btn-outline-cryptix {
+    background-color: transparent;
+    border: 1.5px solid var(--accent-color);
+    color: var(--accent-color) !important;
+    font-weight: 700;
+    padding: 0.6rem 1.35rem;
+    border-radius: 0.85rem;
+    transition: all 0.25s ease;
+}
+
+.btn-outline-cryptix:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--accent-color);
+    color: var(--text-main) !important;
+    transform: translateY(-2px);
+}
+
+.btn-soft-peach {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-soft);
+    color: var(--text-main) !important;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.btn-soft-peach:hover {
+    background-color: var(--primary-color);
+    color: #FFFFFF !important;
+}
+
+/* Inputs & Form Elements */
+.form-control, .form-select {
+    background-color: #FFFFFF !important;
+    border: 1.5px solid var(--border-soft) !important;
+    color: var(--text-main) !important;
+    border-radius: 0.85rem !important;
+    padding: 0.7rem 1rem !important;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--highlight-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(244, 166, 166, 0.25) !important;
+    background-color: #FFFFFF !important;
+}
+
+.input-group-text {
+    background-color: var(--border-light) !important;
+    border: 1.5px solid var(--border-soft) !important;
+    color: var(--accent-color) !important;
+    border-radius: 0.85rem 0 0 0.85rem !important;
+}
+
+/* Concert Hero Banner */
+.hero-concert-banner {
+    background: linear-gradient(135deg, #FDEBE5 0%, #FFF5F1 50%, #FCE8E4 100%);
+    border: 1.5px solid var(--border-soft);
+    border-radius: 1.75rem;
+    padding: 3.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.hero-concert-banner::after {
+    content: "🎶";
+    position: absolute;
+    right: 2%;
+    bottom: -15%;
+    font-size: 15rem;
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+/* Soft Badges */
+.badge-peach {
+    background-color: var(--secondary-color) !important;
+    color: var(--text-main) !important;
+    font-weight: 700;
+    border: 1px solid rgba(217, 119, 87, 0.2);
+    border-radius: 2rem;
+    padding: 0.4rem 0.85rem;
+}
+
+.badge-terracotta {
+    background-color: rgba(217, 119, 87, 0.12) !important;
+    color: var(--accent-color) !important;
+    font-weight: 700;
+    border-radius: 2rem;
+    padding: 0.4rem 0.85rem;
+}
+
+.badge-rose {
+    background-color: rgba(232, 143, 160, 0.16) !important;
+    color: var(--highlight-color) !important;
+    font-weight: 700;
+    border-radius: 2rem;
+    padding: 0.4rem 0.85rem;
+}
+
+/* Concert Ticket Stub Mockup Card */
+.ticket-stub {
+    background: #FFFFFF;
+    border: 1.5px dashed var(--border-soft);
+    border-radius: 1.25rem;
+    position: relative;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.ticket-stub-header {
+    background: linear-gradient(135deg, var(--border-light), var(--secondary-color));
+    margin: -1.5rem -1.5rem 1.25rem -1.5rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 1.25rem 1.25rem 0 0;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+/* Flash Messages */
+.alert {
+    border-radius: 1rem !important;
+    border: 1px solid var(--border-soft) !important;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+}
+
+.alert-success {
+    background-color: #F0FDF4 !important;
+    border-color: #BBF7D0 !important;
+    color: #166534 !important;
+}
+
+.alert-danger {
+    background-color: #FEF2F2 !important;
+    border-color: #FECACA !important;
+    color: #991B1B !important;
+}
+
+.alert-warning {
+    background-color: #FFFBEB !important;
+    border-color: #FDE68A !important;
+    color: #92400E !important;
+}
+
+.alert-info {
+    background-color: var(--border-light) !important;
+    border-color: var(--border-soft) !important;
+    color: var(--accent-color) !important;
+}
+
+/* Form Check (Checkboxes) */
+.form-check-input:checked {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+}
+
+.form-check-input {
+    border: 1.5px solid var(--accent-color) !important;
+    cursor: pointer;
+}
+
+/* Monospace Box for JWT / Security Demonstration */
+.code-box-warm {
+    background-color: var(--bg-main);
+    border: 1.5px solid var(--border-soft);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 0.88rem;
+    color: var(--text-main);
+}
+
+/* Footer */
+.footer-cryptix {
+    background: #FFFFFF;
+    border-top: 1.5px solid var(--border-soft);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}

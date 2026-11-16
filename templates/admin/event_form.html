@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}{% if action == 'edit' %}Edit Concert Event{% else %}Create Concert Event{% endif %} - CrypTix{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-2">
+    <div class="col-12 col-md-8 col-lg-7">
+        <div class="card border-0 shadow-sm p-4 rounded-4">
+            <!-- Header -->
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <div>
+                    <span class="badge badge-terracotta mb-1">Box Office</span>
+                    <h3 class="fw-bold text-dark mb-0 fs-4">
+                        {% if action == 'edit' %}Edit Concert Event{% else %}Create New Concert Event{% endif %}
+                    </h3>
+                </div>
+                <a href="{{ url_for('admin_events.list_events') }}" class="btn btn-outline-secondary btn-sm py-1 px-3">
+                    Cancel
+                </a>
+            </div>
+
+            <!-- Form -->
+            <form method="POST">
+                <!-- Event Title -->
+                <div class="mb-3">
+                    <label for="event_title" class="form-label small fw-bold text-dark">Event Title <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="event_title" name="event_title" 
+                           value="{{ event.event_title if event else '' }}" placeholder="e.g. Coldplay: Music of the Spheres Tour" required>
+                </div>
+
+                <!-- Venue Location -->
+                <div class="mb-3">
+                    <label for="venue" class="form-label small fw-bold text-dark">Venue Location <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="venue" name="venue" 
+                           value="{{ event.venue if event else '' }}" placeholder="e.g. National Stadium Bukit Jalil, Kuala Lumpur" required>
+                </div>
+
+                <!-- Event Date -->
+                <div class="mb-3">
+                    <label for="event_date" class="form-label small fw-bold text-dark">Event Date & Time <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="event_date" name="event_date" 
+                           value="{{ event.event_date if event else '' }}" placeholder="YYYY-MM-DD HH:MM:SS (e.g. 2026-11-22 20:00:00)" required>
+                    <span class="text-muted small" style="font-size: 0.75rem;">Standard format: YYYY-MM-DD HH:MM:SS</span>
+                </div>
+
+                <!-- Capacity and Price -->
+                <div class="row g-2 mb-3">
+                    <div class="col-12 col-sm-6">
+                        <label for="total_capacity" class="form-label small fw-bold text-dark">Total Capacity (Seats) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="total_capacity" name="total_capacity" 
+                               value="{{ event.total_capacity if event else '' }}" placeholder="e.g. 50000" min="1" required>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <label for="ticket_price" class="form-label small fw-bold text-dark">Face Value Price (RM) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" class="form-control" id="ticket_price" name="ticket_price" 
+                               value="{{ event.ticket_price if event else '' }}" placeholder="e.g. 288.00" min="0.01" required>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label for="description" class="form-label small fw-bold text-dark">Concert Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" 
+                              placeholder="Provide artist details, tour highlights, and event entry info...">{{ event.description if event else '' }}</textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary-cryptix flex-grow-1 py-3 fw-bold shadow-sm">
+                        {% if action == 'edit' %}
+                            <i class="bi bi-save me-1"></i> Save Event Changes
+                        {% else %}
+                            <i class="bi bi-plus-circle me-1"></i> Create Concert Event
+                        {% endif %}
+                    </button>
+                    <a href="{{ url_for('admin_events.list_events') }}" class="btn btn-soft-peach py-3 px-4">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

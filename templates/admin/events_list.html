@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Events - Box Office - CrypTix{% endblock %}
+
+{% block content %}
+<div class="row g-3 g-md-4 py-2">
+    <!-- Header -->
+    <div class="col-12">
+        <div class="card border-0 shadow-sm p-3 p-md-4 rounded-4" style="background: linear-gradient(135deg, #FFF0EB 0%, #FFFFFF 100%); border: 1.5px solid var(--accent-color) !important;">
+            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-3">
+                <div>
+                    <span class="badge badge-terracotta mb-2">Box Office Operations</span>
+                    <h2 class="fw-bold text-dark mb-1 fs-3">Concert Event Management</h2>
+                    <p class="text-muted small mb-0">Create, view, update, and manage official concert inventory.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('admin_events.new_event') }}" class="btn btn-primary-cryptix btn-sm py-2 px-3">
+                        <i class="bi bi-plus-circle me-1"></i> + Create Event
+                    </a>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-cryptix btn-sm py-2 px-3">
+                        <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Table -->
+    <div class="col-12">
+        <div class="card border-0 shadow-sm p-3 p-md-4 rounded-4">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <h5 class="fw-bold text-dark mb-0 fs-6">Concert Events Directory ({{ events|length }})</h5>
+                <span class="badge badge-peach small">Phase 2 Event Manager</span>
+            </div>
+
+            {% if events %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 small">
+                        <thead style="background-color: var(--bg-main);">
+                            <tr class="text-muted fw-bold">
+                                <th>ID</th>
+                                <th>Event Title</th>
+                                <th>Venue</th>
+                                <th>Event Date</th>
+                                <th>Capacity Status</th>
+                                <th>Price</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ev in events %}
+                            <tr>
+                                <td class="fw-bold text-muted">#{{ ev.event_id }}</td>
+                                <td>
+                                    <strong class="text-dark d-block">{{ ev.event_title }}</strong>
+                                    <span class="text-muted" style="font-size: 0.75rem;">{{ ev.description[:50] }}...</span>
+                                </td>
+                                <td>{{ ev.venue }}</td>
+                                <td>{{ ev.event_date[:16] if ev.event_date|string|length >= 16 else ev.event_date }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-1">
+                                        <span class="badge {% if ev.available_capacity > 0 %}badge-peach{% else %}bg-danger text-white{% endif %}">
+                                            {{ ev.available_capacity }} / {{ ev.total_capacity }} Left
+                                        </span>
+                                        <span class="text-muted" style="font-size: 0.72rem;">
+                                            ({{ ev.total_capacity - ev.available_capacity }} sold)
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-dark">RM {{ "%.2f"|format(ev.ticket_price) }}</td>
+                                <td class="text-end">
+                                    <div class="d-flex justify-content-end gap-1">
+                                        <a href="{{ url_for('admin_events.edit_event_route', event_id=ev.event_id) }}" class="btn btn-outline-secondary btn-sm py-1 px-2" title="Edit Event">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <form method="POST" action="{{ url_for('admin_events.delete_event_route', event_id=ev.event_id) }}" onsubmit="return confirm('Are you sure you want to delete this event? All associated tickets will be removed.');" class="d-inline">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm py-1 px-2" title="Delete Event">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-calendar-plus text-muted fs-1 mb-2"></i>
+                    <h5 class="fw-bold text-dark">No Events Created Yet</h5>
+                    <p class="text-muted small mb-3">Create your first concert event to open ticket reservations.</p>
+                    <a href="{{ url_for('admin_events.new_event') }}" class="btn btn-primary-cryptix btn-sm py-2 px-3">
+                        <i class="bi bi-plus-circle me-1"></i> + Create Event Now
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

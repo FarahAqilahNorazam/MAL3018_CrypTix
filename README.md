@@ -1,44 +1,59 @@
-# CrypTix 🎟️🔐
-**A Cryptographically Secured E-Ticketing & Access Control Prototype**
+# CrypTix - Phase 1: Authentication & Identity Management
 
-CrypTix is an advanced, localized e-ticketing prototype designed to eradicate ticket scalping and screenshot forgery in the Malaysian event ecosystem. Inspired by global standards like Ticketmaster SafeTix, CrypTix integrates time-sensitive Dynamic QR codes with local Malaysian Identity (MyKad) hashing to provide a zero-trust access control mechanism.
+CrypTix is a cryptographically secured e-ticketing prototype designed for concert scalping mitigation.
+This directory contains **Phase 1: Identity and Access Management (IAM)**.
 
-This project is developed as a Final Year Project (FYP) for a Degree in Cybersecurity.
-
----
-
-## 🚀 Core Security Features
-
-* **Dynamic QR Codes (60-Second TTL):** 
-  Tickets are generated with a live timecode. The QR code expires and refreshes every 60 seconds, completely neutralizing screenshot sharing and duplication attacks.
-* **Cryptographic Identity Binding (SHA-256):** 
-  To comply with Malaysia's PDPA 2010, raw MyKad (IC) numbers are never stored in the QR code. They are securely hashed using SHA-256, permanently linking the digital ticket to a real human identity without exposing sensitive data.
-* **ECDSA Digital Signatures:** 
-  The ticket payload (Hashed MyKad + Timestamp + Ticket ID) is digitally signed using the Organizer's Elliptic Curve Digital Signature Algorithm (ECDSA) Private Key. Any tampering instantly breaks the signature.
-* **Closed-Loop Resale Mechanism:** 
-  Direct peer-to-peer (P2P) transfers are blocked at the architecture level. Buyers who cannot attend must surrender their ticket to the Official CrypTix Resale Pool, which revokes the old identity binding, issues a partial refund, and generates a new secure ticket for the secondary buyer.
-
----
-
-## 🏗️ System Architecture (3-Tier)
-
-1. **Tier 1: Client Layer**
-   * Customer Portal & Admin Dashboard (HTML5 / Frontend Framework)
-   * Unmanned Gate Kiosk Scanner (`HTML5-QRCode`)
-2. **Tier 2: Security & Application Logic Layer**
-   * API Gateway & Router (Python / Flask)
-   * Cryptographic Engine (SHA-256 Hashing & ECDSA Signing Modules)
-   * Dynamic QR Generator
-3. **Tier 3: Data & Key Storage Layer**
-   * Relational Database (MySQL) for User & Ticket Data
-   * Secure Key Vault for ECDSA Private Keys
+## Implemented Phase 1 Features
+- **User Registration**:
+  - Role selection is completely disabled from registration. All new users are strictly created as **Customer**.
+  - **Mandatory PDPA 2010 Consent Checkbox**: Accounts cannot be created unless the user explicitly acknowledges the data protection policy.
+- **BCrypt Password Hashing**: Passwords are salted and hashed (12 rounds) before database storage.
+- **JWT Session Authentication**: Upon successful login, a signed JSON Web Token is issued and stored in an HTTP-only secure cookie (`cryptix_token`).
+- **Role-Based Access Control (RBAC)**:
+  - `@login_required`: Restricts protected pages (`/dashboard`).
+  - `@admin_required`: Restricts privileged routes (`/admin`).
+- **Seeded System Administrator**: Admin accounts cannot register publicly; they are seeded manually via database script.
+- **MySQL Database Support with Auto-Fallback**:
+  - Connects to MySQL (`cryptix_db`) via `PyMySQL`.
+  - If your MySQL/XAMPP service is not running during initial development, it automatically falls back to local SQLite (`cryptix_local.db`) so testing is never blocked.
 
 ---
 
-## 🛠️ Technology Stack
-* **Backend:** Python, Flask
-* **Frontend:** HTML5, CSS, JS (React / Bootstrap)
-* **Database:** MySQL
-* **Cryptography:** `hashlib` (SHA-256), `ecdsa` (Digital Signatures)
-* **Scanning Module:** `html5-qrcode` (Browser-based scanner)
+## Default Seeded Admin Credentials
+- **Email**: `admin@cryptix.com`
+- **Password**: `AdminPassword123!`
+- **Role**: `Admin`
 
+---
+
+## How to Run
+
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 2. (Optional) Run with MySQL
+If using MySQL (e.g. XAMPP):
+1. Start MySQL on `localhost:3306`.
+2. Configure credentials in `config.py` or `.env` if different from root/empty password.
+3. Import `database/schema.sql`:
+   ```bash
+   mysql -u root < database/schema.sql
+   ```
+
+### 3. Seed the Admin Account (Manual Seeding)
+```bash
+python seed_admin.py
+```
+
+### 4. Start the Web Application
+```bash
+python app.py
+```
+Open your browser at **http://127.0.0.1:5000**.
+
+### 5. Run Automated Tests
+```bash
+python -m unittest tests/test_phase1.py -v
+```
