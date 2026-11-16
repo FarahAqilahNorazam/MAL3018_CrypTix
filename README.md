@@ -1,59 +1,119 @@
-# CrypTix - Phase 1: Authentication & Identity Management
+🎟️ CrypTix
+🔐 Overview
+CrypTix is a cryptographically secured web-based e-ticketing platform designed to mitigate concert ticket scalping, ticket forgery, unauthorized ticket sharing, and ownership abuse.
 
-CrypTix is a cryptographically secured e-ticketing prototype designed for concert scalping mitigation.
-This directory contains **Phase 1: Identity and Access Management (IAM)**.
+The system introduces security-focused mechanisms to improve ticket authenticity, strengthen ticket ownership verification, and provide a safer ticket purchasing experience for both event organizers and attendees.
 
-## Implemented Phase 1 Features
-- **User Registration**:
-  - Role selection is completely disabled from registration. All new users are strictly created as **Customer**.
-  - **Mandatory PDPA 2010 Consent Checkbox**: Accounts cannot be created unless the user explicitly acknowledges the data protection policy.
-- **BCrypt Password Hashing**: Passwords are salted and hashed (12 rounds) before database storage.
-- **JWT Session Authentication**: Upon successful login, a signed JSON Web Token is issued and stored in an HTTP-only secure cookie (`cryptix_token`).
-- **Role-Based Access Control (RBAC)**:
-  - `@login_required`: Restricts protected pages (`/dashboard`).
-  - `@admin_required`: Restricts privileged routes (`/admin`).
-- **Seeded System Administrator**: Admin accounts cannot register publicly; they are seeded manually via database script.
-- **MySQL Database Support with Auto-Fallback**:
-  - Connects to MySQL (`cryptix_db`) via `PyMySQL`.
-  - If your MySQL/XAMPP service is not running during initial development, it automatically falls back to local SQLite (`cryptix_local.db`) so testing is never blocked.
+CrypTix is developed as part of the MAL3018 Computing Project.
 
----
+🎯 Objectives
+Reduce ticket scalping and unauthorized ticket resale.
+Improve ticket ownership verification.
+Protect sensitive user information through cryptographic techniques.
+Strengthen ticket authenticity and validation processes.
+Provide a secure and user-friendly web-based ticketing platform.
+✨ Core Features
+👤 User Management
+User Registration
+User Authentication
+Role-Based Access Control (RBAC)
+Administrator and Customer Accounts
+Secure Session Management
+🎫 Ticket Management
+Event Discovery and Browsing
+Ticket Purchasing
+Ticket Ownership Tracking
+Automatic Seat Assignment
+Personal Ticket Dashboard
+🏟️ Event Management
+Event Creation
+Event Administration
+Ticket Inventory Tracking
+Event Listing and Details
+🔒 Security Features
+BCrypt Password Hashing
+JSON Web Token (JWT) Authentication
+Secure Session Cookies
+Access Control Enforcement
+🔬 Planned Security Enhancements
+SHA-256 Identity Tokenization
+User identity information will be tokenized using SHA-256 hashing to support privacy-preserving ownership verification.
 
-## Default Seeded Admin Credentials
-- **Email**: `admin@cryptix.com`
-- **Password**: `AdminPassword123!`
-- **Role**: `Admin`
+ECDSA Digital Signatures
+Digital signatures will be used to verify ticket authenticity and prevent ticket tampering.
 
----
+Dynamic QR Authentication
+Time-based QR codes will reduce the risk of screenshot sharing and replay attacks.
 
-## How to Run
+Ticket Validation Scanner
+A QR validation module will verify ticket integrity, ownership status, and access permissions during entry.
 
-### 1. Install Dependencies
-```bash
+Closed-Loop Resale Pool
+The platform will provide a controlled ticket resale mechanism to reduce unauthorized ticket transfers and scalping activities.
+
+🏗️ System Architecture
+CrypTix follows a three-tier architecture:
+
+Presentation Layer
+HTML5
+CSS3
+Bootstrap 5
+JavaScript
+Application Layer
+Python Flask
+Data Layer
+SQLite (Development Environment)
+MySQL (Target Deployment Environment)
+🛠️ Technology Stack
+Frontend
+HTML5
+CSS3
+Bootstrap 5
+JavaScript
+Backend
+Python Flask
+Database
+SQLite
+MySQL
+Security Technologies
+BCrypt
+JSON Web Token (JWT)
+SHA-256
+ECDSA
+📂 Project Structure
+CrypTix
+├── database/
+├── routes/
+├── static/
+├── templates/
+├── tests/
+├── utils/
+├── app.py
+├── config.py
+├── requirements.txt
+├── seed_admin.py
+└── README.md
+🚀 Installation
+Install Dependencies
 pip install -r requirements.txt
-```
+Run Application
+py app.py
+Open:
 
-### 2. (Optional) Run with MySQL
-If using MySQL (e.g. XAMPP):
-1. Start MySQL on `localhost:3306`.
-2. Configure credentials in `config.py` or `.env` if different from root/empty password.
-3. Import `database/schema.sql`:
-   ```bash
-   mysql -u root < database/schema.sql
-   ```
+http://127.0.0.1:5000
+📚 Academic Information
+Project Title
 
-### 3. Seed the Admin Account (Manual Seeding)
-```bash
-python seed_admin.py
-```
+CrypTix: A Cryptographically Secured E-Ticketing Web Application for Concert Scalping Mitigation Using SHA-256, ECDSA and Dynamic QR Authentication
 
-### 4. Start the Web Application
-```bash
-python app.py
-```
-Open your browser at **http://127.0.0.1:5000**.
+Module
 
-### 5. Run Automated Tests
-```bash
-python -m unittest tests/test_phase1.py -v
-```
+MAL3018 Computing Project
+
+Author
+
+Farah Aqilah Norazam
+
+⚠️ Disclaimer
+This project is developed for academic and educational purposes as part of a Final Year Computing Project. Commercial deployment would require additional security reviews, infrastructure hardening, compliance assessments, and production-grade testing.
+
